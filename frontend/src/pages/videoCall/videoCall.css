@@ -1,0 +1,106 @@
+.call-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    overflow: hidden;
+}
+
+.remote-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.local-video {
+    position: absolute;
+    bottom: 90px;
+    right: 20px;
+    width: 160px;
+    height: 120px;
+    background: black;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.local-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder {
+    width: 100%;
+    height: 100%;
+    background: #111;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.placeholder.small {
+    font-size: 12px;
+}
+
+.controls {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.controls button {
+    padding: 10px 16px;
+    border-radius: 30px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.controls .end {
+    background: red;
+    color: white;
+}
+
+.status {
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.incoming {
+    color: white;
+    text-align: center;
+    margin-top: 30vh;
+}
+
+.incoming-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.accept {
+    background: green;
+    color: white;
+    padding: 10px 20px;
+}
+
+.reject {
+    background: red;
+    color: white;
+    padding: 10px 20px;
+}
+
+.error {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    color: red;
+}
