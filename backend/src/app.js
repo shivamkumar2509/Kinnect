@@ -23,11 +23,6 @@ const searchRoutes = require("./routes/search.routes");
 
 const { initSocket } = require("./config/socket");
 connectDB();
-//middleware
-app.use(express.json({ strict: false }));
-app.use(express.urlencoded({ extended: true }));
-const dbUrl = process.env.ATLASDB_URL;
-
 // app.use(cors());
 app.use(
   cors({
@@ -35,6 +30,10 @@ app.use(
     credentials: true,
   }),
 );
+//middleware
+app.use(express.json({ strict: false }));
+app.use(express.urlencoded({ extended: true }));
+const dbUrl = process.env.ATLASDB_URL;
 
 app.set("trust proxy", 1);
 
