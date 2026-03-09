@@ -31,7 +31,7 @@ const dbUrl = process.env.ATLASDB_URL;
 // app.use(cors());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: ["http://localhost:5173", "https://kinnect-ui.onrender.com"],
     credentials: true,
   }),
 );
