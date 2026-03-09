@@ -13,7 +13,7 @@ require("./config/passport");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const passport = require("passport");
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 const http = require("http");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");

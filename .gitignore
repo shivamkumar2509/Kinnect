@@ -12,3 +12,4 @@ backend/.env
 frontend/.env
 dist
 build
+backend/src/init
