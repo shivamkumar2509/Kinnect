@@ -2,11 +2,11 @@ if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
 const Posts = require("./models/post.model");
 const User = require("./models/user.model");
-const cors = require("cors");
 const path = require("path");
 const connectDB = require("./config/db");
 require("./config/passport");
