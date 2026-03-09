@@ -43,11 +43,12 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      // mongoUrl: "mongodb://127.0.0.1:27017/kinnect",
       mongoUrl: dbUrl,
     }),
     cookie: {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
   }),
