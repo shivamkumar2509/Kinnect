@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import API from "../../services/api";
+import UserAvatar from "../../componenets/UserAvatar";
 
 const ChatSidebar = ({ onSelectUser }) => {
   const [followingList, setFollowingList] = useState([]);
@@ -46,7 +47,13 @@ const ChatSidebar = ({ onSelectUser }) => {
           onClick={() => onSelectUser(user)}
         >
           <div className="avatar">
-            {user.username?.charAt(0)?.toUpperCase() || "U"}
+            {(
+              <UserAvatar
+                avatar={user?.avatar?.url}
+                username={user?.username}
+                size={40}
+              />
+            ) || user.username?.charAt(0)?.toUpperCase()}
           </div>
           <div>
             <strong>{user.username}</strong>

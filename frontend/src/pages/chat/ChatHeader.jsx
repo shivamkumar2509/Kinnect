@@ -1,5 +1,6 @@
 import CallIcon from "@mui/icons-material/Call";
 import { useNavigate } from "react-router-dom";
+import UserAvatar from "../../componenets/UserAvatar";
 import socket from "../../services/socket.service";
 const ChatHeader = ({ user }) => {
   const navigate = useNavigate();
@@ -13,7 +14,16 @@ const ChatHeader = ({ user }) => {
   };
   return (
     <div className="chat-header">
-      <div className="avatar"> {user.username?.charAt(0)?.toUpperCase()}</div>
+      <div className="avatar">
+        {" "}
+        {(
+          <UserAvatar
+            avatar={user?.avatar?.url}
+            username={user?.username}
+            size={40}
+          />
+        ) || user.username?.charAt(0)?.toUpperCase()}
+      </div>
       <div>
         <strong>{user.username}</strong>
         &nbsp;

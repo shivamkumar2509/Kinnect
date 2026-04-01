@@ -7,14 +7,14 @@ const VideoCall = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* ================= REFS ================= */
+  /* userefs */
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const peerRef = useRef(null);
   const localStreamRef = useRef(null);
   const isCallerRef = useRef(false);
 
-  /* ================= STATE ================= */
+  /* states */
   const [isCalling, setIsCalling] = useState(false);
   const [isIncoming, setIsIncoming] = useState(false);
   const [isInCall, setIsInCall] = useState(false);
@@ -25,12 +25,12 @@ const VideoCall = () => {
 
   const [error, setError] = useState("");
 
-  /* ================= SOCKET ================= */
+  /* socket */
   useEffect(() => {
     if (!socket.connected) socket.connect();
   }, []);
 
-  /* ================= CALLER ================= */
+  /* caller */
   useEffect(() => {
     if (location.state?.isCaller) {
       isCallerRef.current = true;
@@ -38,7 +38,7 @@ const VideoCall = () => {
     }
   }, [location.state]);
 
-  /* ================= MEDIA ================= */
+  /* media */
   const getMedia = async () => {
     if (localStreamRef.current) return localStreamRef.current;
 
@@ -55,7 +55,7 @@ const VideoCall = () => {
     }
   };
 
-  /* ================= ATTACH LOCAL VIDEO ================= */
+  /*attach local video cal */
   useEffect(() => {
     if (isInCall && localVideoRef.current && localStreamRef.current) {
       localVideoRef.current.srcObject = localStreamRef.current;
@@ -64,18 +64,18 @@ const VideoCall = () => {
     }
   }, [isInCall]);
 
-  /* ================= PEER ================= */
+  /* peer */
   const createPeer = (remoteId) => {
     const peer = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
 
-    // SEND LOCAL TRACKS
+    // send local track
     localStreamRef.current?.getTracks().forEach((track) => {
       peer.addTrack(track, localStreamRef.current);
     });
 
-    // RECEIVE REMOTE TRACKS (VIDEO + AUDIO)
+    // receive remote track
     peer.ontrack = (e) => {
       const stream = e.streams[0];
       if (!stream) return;
@@ -105,7 +105,7 @@ const VideoCall = () => {
     return peer;
   };
 
-  /* ================= CALL FLOW ================= */
+  /* call flow */
   const createOffer = async () => {
     peerRef.current = createPeer(remoteUserId);
     const offer = await peerRef.current.createOffer();
@@ -127,7 +127,7 @@ const VideoCall = () => {
     cleanup();
   };
 
-  /* ================= SOCKET EVENTS ================= */
+  /* socket events */
   useEffect(() => {
     socket.on("call:incoming", () => {
       isCallerRef.current = false;
@@ -172,7 +172,7 @@ const VideoCall = () => {
     return () => socket.removeAllListeners();
   }, []);
 
-  /* ================= CONTROLS ================= */
+  /* controls */
   const toggleVideo = () => {
     const track = localStreamRef.current?.getVideoTracks()[0];
     if (!track) return;
@@ -180,7 +180,7 @@ const VideoCall = () => {
     track.enabled = !track.enabled;
     setIsVideoOn(track.enabled);
 
-    //  SEND UPDATE TO REMOTE
+    //  send update to remote
     const sender = peerRef.current
       ?.getSenders()
       .find((s) => s.track?.kind === "video");
@@ -195,7 +195,7 @@ const VideoCall = () => {
     track.enabled = !track.enabled;
     setIsMuted(!track.enabled);
 
-    //  SEND UPDATE TO REMOTE
+    //  send update to remote
     const sender = peerRef.current
       ?.getSenders()
       .find((s) => s.track?.kind === "audio");
@@ -203,7 +203,7 @@ const VideoCall = () => {
     if (sender) sender.replaceTrack(track);
   };
 
-  /* ================= CLEANUP ================= */
+  /*cleanup */
   const cleanup = () => {
     peerRef.current?.close();
     peerRef.current = null;
@@ -225,7 +225,7 @@ const VideoCall = () => {
     navigate("/chat", { replace: true });
   };
 
-  /* ================= UI ================= */
+  /* UI */
   return (
     <div className="call-container">
       {error && <p className="error">{error}</p>}
@@ -248,7 +248,7 @@ const VideoCall = () => {
 
       {isInCall && (
         <>
-          {/* REMOTE VIDEO */}
+          {/* remote video */}
           <div className="remote-video">
             {isRemoteVideoOn ? (
               <video ref={remoteVideoRef} autoPlay playsInline />
@@ -257,7 +257,7 @@ const VideoCall = () => {
             )}
           </div>
 
-          {/* LOCAL VIDEO (FLOATING) */}
+          {/* local video */}
           <div className="local-video">
             {isVideoOn ? (
               <video ref={localVideoRef} autoPlay muted playsInline />
@@ -266,7 +266,7 @@ const VideoCall = () => {
             )}
           </div>
 
-          {/* CONTROLS */}
+          {/* controls */}
           <div className="controls">
             <button onClick={toggleVideo}>
               {isVideoOn ? "🎥 Off" : "🎥 On"}
