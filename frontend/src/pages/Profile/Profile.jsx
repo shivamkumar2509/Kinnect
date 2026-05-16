@@ -3,10 +3,14 @@ import { useParams } from "react-router-dom";
 import API from "../../services/api";
 import PublicPostCard from "../../componenets/PublicPostCard";
 import UserAvatar from "../../componenets/UserAvatar";
+import ShowFollowers from "./ShowFollowers";
+import ShowFollowing from "./ShowFollowing";
 
 const Profile = () => {
   const { userId } = useParams();
 
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +54,13 @@ const Profile = () => {
   if (!profile) return <h3>User not found</h3>;
 
   return (
-    <div className="container mt-5">
+    <div
+      className="container mt-5"
+      style={{
+        position: "relative",
+        zIndex: 1000, //
+      }}
+    >
       {/* PROFILE HEADER */}
       <div className="row align-items-center">
         <div className="col-md-4 text-center">
@@ -64,18 +74,40 @@ const Profile = () => {
         <div className="col-md-8">
           <h2>{profile?.username}</h2>
 
-          <div className="d-flex gap-4 mt-3">
+          <div className="d-flex gap-4 mt-3" style={{ cursor: "pointer" }}>
             <div>
               <strong>{posts.length}</strong>
               <div>Posts</div>
             </div>
 
-            <div>
+            <div
+              onClick={() => {
+                console.log("clicked followers");
+                setShowFollowers(true);
+              }}
+              style={{
+                cursor: "pointer",
+                position: "relative",
+                zIndex: 2000, // 🔥 IMPORTANT
+                pointerEvents: "auto",
+              }}
+            >
               <strong>{profile?.followersCount}</strong>
               <div>Followers</div>
             </div>
 
-            <div>
+            <div
+              onClick={() => {
+                console.log("clicked following");
+                setShowFollowing(true);
+              }}
+              style={{
+                cursor: "pointer",
+                position: "relative",
+                zIndex: 2000, //
+                pointerEvents: "auto",
+              }}
+            >
               <strong>{profile?.followingCount}</strong>
               <div>Following</div>
             </div>
@@ -104,6 +136,21 @@ const Profile = () => {
           </div>
         ))}
       </div>
+
+      {/* RIGHT SIDEBARS */}
+      {showFollowers && (
+        <ShowFollowers
+          userId={userId}
+          onClose={() => setShowFollowers(false)}
+        />
+      )}
+
+      {showFollowing && (
+        <ShowFollowing
+          userId={userId}
+          onClose={() => setShowFollowing(false)}
+        />
+      )}
     </div>
   );
 };
