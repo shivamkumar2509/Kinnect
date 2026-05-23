@@ -119,7 +119,7 @@ exports.deleteMessage = async (req, res) => {
       return res.status(404).json({ message: "Chat not found" });
     }
 
-    // FIX: proper ObjectId comparison
+    // proper ObjectId comparison
     const isParticipant = chat.participants.some(
       (id) => id.toString() === userId.toString(),
     );
