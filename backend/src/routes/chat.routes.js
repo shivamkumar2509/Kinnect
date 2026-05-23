@@ -13,5 +13,9 @@ router.get(
   isAuthenticated,
   chatController.getMessages,
 );
-
+router.delete(
+  "/chats/:chatId/messages/:messageId",
+  isAuthenticated,
+  chatController.deleteMessage,
+);
 module.exports = router;

@@ -26,7 +26,12 @@ const ChatMessages = ({ chatId }) => {
       if (msg.chatId === chatId) {
         setChat((prev) => [
           ...prev,
-          { ...msg, sender: msg.sender || msg.senderId },
+          {
+            _id: msg._id,
+            chat: chatId,
+            sender: msg.senderId,
+            content: msg.content || msg.text || "",
+          },
         ]);
       }
     });
@@ -35,19 +40,52 @@ const ChatMessages = ({ chatId }) => {
     };
   }, [chatId]);
 
+  const handleDelete = async (messageId) => {
+    if (!window.confirm("Delete this message?")) return;
+
+    try {
+      await API.delete(`/chats/${chatId}/messages/${messageId}`);
+
+      setChat((prev) => prev.filter((msg) => msg._id !== messageId));
+
+      console.log("Message deleted:", messageId);
+    } catch (e) {
+      console.log("Delete error:", e);
+    }
+  };
   return (
     <div className="chat-messages">
       {chat.map((msg, index) => {
-        const senderId =
-          typeof msg.sender === "object"
-            ? msg.sender?._id?.toString()
-            : msg.sender?.toString();
+        const senderId = msg.sender?._id
+          ? msg.sender._id.toString()
+          : msg.sender?.toString();
 
         const isMine = senderId === myUserId?.toString();
         const key = msg._id || `${senderId}-${msg.createdAt || index}`;
         return (
           <div key={key} className={`message ${isMine ? "mine" : "theirs"}`}>
-            {msg.content || msg.text || ""}
+            <div className="message-top">
+              <span>{msg.content || msg.text || ""}</span>
+
+              {isMine && (
+                <div className="dropdown">
+                  <button className="dots-btn" data-bs-toggle="dropdown">
+                    ⋮
+                  </button>
+
+                  <ul className="dropdown-menu">
+                    <li>
+                      <button
+                        className="dropdown-item text-danger"
+                        onClick={() => handleDelete(msg._id)}
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

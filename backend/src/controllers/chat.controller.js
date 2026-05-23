@@ -108,3 +108,56 @@ exports.getChats = async (req, res) => {
 
   res.json(chats);
 };
+
+exports.deleteMessage = async (req, res) => {
+  try {
+    const { chatId, messageId } = req.params;
+    const userId = req.user._id;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found" });
+    }
+
+    // FIX: proper ObjectId comparison
+    const isParticipant = chat.participants.some(
+      (id) => id.toString() === userId.toString(),
+    );
+
+    if (!isParticipant) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    // only sender can delete
+    if (message.sender.toString() !== userId.toString()) {
+      return res.status(403).json({
+        message: "You can only delete your own message",
+      });
+    }
+
+    await Message.findByIdAndDelete(messageId);
+
+    // update lastMessage safely
+    if (chat.lastMessage?.toString() === messageId) {
+      const lastMsg = await Message.findOne({ chat: chatId }).sort({
+        createdAt: -1,
+      });
+
+      chat.lastMessage = lastMsg ? lastMsg._id : null;
+      await chat.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Message deleted successfully",
+    });
+  } catch (e) {
+    console.error("DELETE MESSAGE ERROR:", e);
+    return res.status(500).json({ message: e.message });
+  }
+};
