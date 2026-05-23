@@ -12,6 +12,7 @@ const Profile = () => {
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [myProfile, setMyProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +23,9 @@ const Profile = () => {
           API.get(`/users/${userId}`),
           API.get(`/users/${userId}/posts`),
         ]);
-
+        const myProfile = await API.get(`/users/me`);
+        // console.log("my profile:-->", myProfile);
+        setMyProfile(myProfile.data.user._id);
         setProfile(profileRes.data.user);
         setPosts(postsRes.data.posts || []);
       } catch (e) {
@@ -88,7 +91,7 @@ const Profile = () => {
               style={{
                 cursor: "pointer",
                 position: "relative",
-                zIndex: 2000, // 🔥 IMPORTANT
+                zIndex: 2000, //
                 pointerEvents: "auto",
               }}
             >
@@ -113,16 +116,18 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="mt-3">
-            <button
-              className={`btn ${
-                profile?.isFollowing ? "btn-outline-danger" : "btn-primary"
-              }`}
-              onClick={handleFollowToggle}
-            >
-              {profile?.isFollowing ? "Unfollow" : "Follow"}
-            </button>
-          </div>
+          {myProfile !== userId && (
+            <div className="mt-3">
+              <button
+                className={`btn ${
+                  profile?.isFollowing ? "btn-outline-danger" : "btn-primary"
+                }`}
+                onClick={handleFollowToggle}
+              >
+                {profile?.isFollowing ? "Unfollow" : "Follow"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

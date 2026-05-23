@@ -2,6 +2,7 @@ import CallIcon from "@mui/icons-material/Call";
 import { useNavigate } from "react-router-dom";
 import UserAvatar from "../../componenets/UserAvatar";
 import socket from "../../services/socket.service";
+
 const ChatHeader = ({ user }) => {
   const navigate = useNavigate();
   const handleCall = () => {
@@ -12,9 +13,12 @@ const ChatHeader = ({ user }) => {
       state: { isCaller: true },
     });
   };
+  const goToProfile = () => {
+    navigate(`/profile/${user._id}`);
+  };
   return (
     <div className="chat-header">
-      <div className="avatar">
+      <div className="avatar" onClick={goToProfile}>
         {" "}
         {(
           <UserAvatar
