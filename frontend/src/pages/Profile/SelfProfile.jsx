@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import ShowFollowers from "./ShowFollowers";
 import ShowFollowing from "./ShowFollowing";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const SelfProfile = () => {
   const { user, setUser } = useAuth(); // Only declare this once
@@ -70,7 +71,18 @@ const SelfProfile = () => {
         </div>
 
         <div className="col-md-8">
-          <h2>{user?.username}</h2>
+          <div className="d-flex align-items-center justify-content-between">
+            <h2 className="mb-0">{user?.username}</h2>
+
+            <SettingsIcon
+              style={{
+                fontSize: "2rem",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("settings")}
+            />
+          </div>
+
           <p>{user?.email}</p>
 
           {/* STATS */}

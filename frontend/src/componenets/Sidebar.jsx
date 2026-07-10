@@ -1,32 +1,41 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
-  const [active, setActive] = useState("");
+
   const handleLogout = async () => {
     try {
       await logout();
       navigate("/", { replace: true });
     } catch (e) {
-      console.error("logout failed", e);
+      console.error("Logout failed", e);
     }
   };
+
   return (
-    <div
-      className="sidebar d-flex flex-column p-3 mt-2 border-end fixed"
-      // style={{ minHeight: "calc(100vh - 70px)" }}
+    <aside
+      className="border-end bg-white shadow-sm"
+      style={{
+        position: "fixed",
+        top: "70px", // Adjust according to navbar height
+        left: 0,
+        width: "260px",
+        height: "calc(100vh - 70px)",
+        zIndex: 1000,
+        padding: "1rem",
+        overflowY: "auto",
+      }}
     >
       <ul className="nav nav-pills flex-column gap-2 h-100">
         <li className="nav-item">
           <NavLink
             to="/"
+            end
             className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
+              `nav-link ${isActive ? "active" : "text-dark"}`
             }
-            style={{ cursor: "pointer" }}
           >
             🏠 Dashboard
           </NavLink>
@@ -36,9 +45,8 @@ const Sidebar = () => {
           <NavLink
             to="/selfProfile"
             className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
+              `nav-link ${isActive ? "active" : "text-dark"}`
             }
-            style={{ cursor: "pointer" }}
           >
             👤 Profile
           </NavLink>
@@ -48,37 +56,41 @@ const Sidebar = () => {
           <NavLink
             to="/chat"
             className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
+              `nav-link ${isActive ? "active" : "text-dark"}`
             }
-            style={{ cursor: "pointer" }}
           >
             💬 Chat
           </NavLink>
         </li>
 
-        {/* <li className="nav-item">
-          <a
-            to={() => {
-              navigate("/VideoCall");
-            }}
-            className="nav-link"
-            style={{ cursor: "pointer" }}
-          >
-            📞 Calls
-          </a>
-        </li> */}
-
+        {/* Bottom Section */}
         <li className="nav-item mt-auto">
-          <span
+          <button
+            onClick={() => navigate("/ai-chat")}
+            className="w-100 border-0 text-white"
+            style={{
+              background: "linear-gradient(135deg, #0d6efd, #6610f2)",
+              borderRadius: "14px",
+              padding: "12px",
+              fontWeight: "600",
+              boxShadow: "0 6px 15px rgba(13,110,253,.25)",
+              transition: "all 0.3s ease",
+            }}
+          >
+            🤖 AI Chat Assistant
+          </button>
+        </li>
+
+        <li className="nav-item mt-3">
+          <button
             onClick={handleLogout}
-            className="nav-link text-danger"
-            style={{ cursor: "pointer" }}
+            className="btn btn-outline-danger w-100"
           >
             🚪 Logout
-          </span>
+          </button>
         </li>
       </ul>
-    </div>
+    </aside>
   );
 };
 
